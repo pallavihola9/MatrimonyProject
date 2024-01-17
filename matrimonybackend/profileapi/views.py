@@ -29,7 +29,7 @@ class Profile_register(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class Profile_registerView(APIView):
+class Profile_registerUpdateDeleteView(APIView):
     def get_object(self, pk):
         return get_object_or_404(Profile, pk=pk)
 
