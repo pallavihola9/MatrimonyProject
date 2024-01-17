@@ -55,6 +55,10 @@ class ProfileView(APIView):
   def get(self, request, format=None):
     serializer = ProfileSerializer(request.user)
     return Response(serializer.data, status=status.HTTP_200_OK)
+  
+
+   
+      
 
 
 

@@ -1,4 +1,5 @@
 from django.http import Http404
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -30,27 +31,25 @@ class Profile_register(APIView):
 
 class Profile_registerView(APIView):
     def get_object(self, pk):
-        try:
-            return Profile.objects.get(pk=pk)
-        except Profile.DoesNotExist:
-            raise Http404
+        return get_object_or_404(Profile, pk=pk)
 
-    def get(self, request, pk, format=None):
-        Familydetails = self.get_object(pk)
-        serializer = ProfileSerializer(Familydetails)
+    def get(self, request, pk):
+        search = self.get_object(pk)
+        serializer = ProfileSerializer(search)
         return Response(serializer.data)
 
-    def put(self, request, pk, format=None):
-        Familydetails = self.get_object(pk)
-        serializer = ProfileSerializer(Familydetails, data=request.data)
+    def put(self, request, pk):
+        search = self.get_object(pk)
+        serializer = ProfileSerializer(search, data=request.data, partial=True)
+
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
+           serializer.save()
+           return Response(serializer.data)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk, format=None):
-        Familydetails = self.get_object(pk)
-        Familydetails.delete()
-        return Response({"message": " Deleted Successfully "},status=status.HTTP_204_NO_CONTENT)
 
-
+    def delete(self, request, pk):
+        search = self.get_object(pk)
+        search.delete()
+        return Response({"message":"Delete Successfully!!!"},status=status.HTTP_204_NO_CONTENT)

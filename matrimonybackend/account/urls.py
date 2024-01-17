@@ -7,6 +7,7 @@ urlpatterns = [
     path('register/', UserRegistrationView.as_view(), name='register'),
     path('login/',UserLoginView.as_view(), name='login'),
     path('profile/',ProfileView.as_view(), name='profile'),
+    
     # change password is working
     path('changepassword/', ChangePasswordView.as_view(), name='changepassword'),
     #is working but not getting mail
