@@ -60,12 +60,16 @@ class UserChangePasswordSerializer(serializers.Serializer):
 
 import requests
 
-url = "https://hourmailer.p.rapidapi.com/send"
+# url = "https://hourmailer.p.rapidapi.com/send"
+url = "https://mail-sender-api1.p.rapidapi.com/"
+# url =  "https://demo-project67614.p.rapidapi.com/catalog/product"
+
 
 class SendPasswordResetEmailSerializer(serializers.Serializer):
   email = serializers.EmailField(max_length=255)
   class Meta:
     fields = ['email']
+
 
   def validate(self, attrs):
     email = attrs.get('email')
@@ -75,17 +79,30 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
       print('Encoded UID', uid)
       token = PasswordResetTokenGenerator().make_token(user)
       print('Password Reset Token', token)
-      link = 'https://hola9.com/api/user/reset/'+uid+'/'+token    
+      link = 'https://jobs.hola9.info/PasswordChange2'+uid+'/'+token 
+        
+      # payload = {
+      #     "toAddress":email,
+      #     "title": "hola9 link",
+      #     "message": link
+      #     }
       payload = {
-	        "toAddress":email,
-	        "title": "hola9 link",
-	        "message": link
-          }
+  "sendto": email,
+  "ishtml": "false",
+  "title": "hola9 link",
+  "body": link
+}
+ 
       headers = {
-	        "content-type": "application/json",
-	        "X-RapidAPI-Key": "6ce72a7a7dmsh214ebefb254c11ap1ec502jsn5a1bfe3fd20a",
-	        "X-RapidAPI-Host": "hourmailer.p.rapidapi.com"
-        } 
+          "content-type": "application/json",
+          # "X-RapidAPI-Key": "6ce72a7a7dmsh214ebefb254c11ap1ec502jsn5a1bfe3fd20a",
+          # "X-RapidAPI-Host": "hourmailer.p.rapidapi.com"
+          "X-RapidAPI-Key": "1606ead861msh1b5bcc178cc7894p163e10jsnc0a88a24283b",
+          "X-RapidAPI-Host": "mail-sender-api1.p.rapidapi.com"
+          # "X-RapidAPI-Key": "90e92901c8msh767dd29f7b4a7e3p147abajsncd8fab11a708",
+          # "X-RapidAPI-Host": "demo-project67614.p.rapidapi.com"
+        }
+
 
       response = requests.request("POST", url, json=payload, headers=headers)
       print('Password Reset Link', link)
@@ -100,6 +117,7 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
       return attrs
     else:
       raise serializers.ValidationError('You are not a Registered User')
+
     
 
 class UserPasswordResetSerializer(serializers.Serializer):
